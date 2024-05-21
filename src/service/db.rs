@@ -1,4 +1,4 @@
-use mongodb::{bson::doc, error::Error, Client, Collection};
+use mongodb::{bson::doc, error::Error, options::FindOneAndUpdateOptions, Client, Collection};
 
 use crate::model::beneficiaries_model::Beneficiaries;
 #[derive(Clone)]
@@ -16,9 +16,27 @@ impl Database {
         beneficiaries
     }} 
 
-    pub async fn update_beneficiary(&self,address:String) -> Result<Option<Beneficiaries>,Error>{
+    pub async fn update_beneficiary(&self,address:String,claim_time:i64,claimed_token:f64) -> Result<Option<Beneficiaries>,Error>{
 
-        let result = self.beneficiaries.find_one_and_update(doc! {"key":address}, doc!{"$set":{"claimedTokens":1000,"lastClaimTime":1000000}}, None).await.ok().expect("failed the ");
+        let filter = doc! {"key": &address};
+        let update = doc! {
+            "$set": {"lastClaimTime": claim_time},
+            "$inc": {"claimedTokens": claimed_token}
+        };
+
+        let old_beneficiary = self.beneficiaries.find_one(filter.clone(), None).await?;
+        if let Some(old) = old_beneficiary {
+            if(old.last_claim_time == claim_time) {
+                return Err(Error::custom("LastClaim time can't same with before"))
+            }
+        }
+        let options = FindOneAndUpdateOptions::builder().return_document(mongodb::options::ReturnDocument::After).build();
+        let result = self.beneficiaries.find_one_and_update(filter, update, options).await?;
+        Ok(result)
+    }
+
+    pub async fn get_beneficiary(&self,address:String) -> Result<Option<Beneficiaries>,Error> {
+        let result = self.beneficiaries.find_one(doc! {"key":address}, None).await.ok().expect("Find failed");
         Ok(result)
     }
 }

@@ -7,9 +7,10 @@ pub struct Beneficiaries {
     pub index:u32,
     pub key:String,
     #[serde(rename = "allocatedTokens")]
-    pub allocated_tokens:u64,
+    pub allocated_tokens:f64,
     #[serde(rename = "claimedTokens")]
-    pub claimed_tokens:u64,
+    pub claimed_tokens:f64,
     #[serde(rename = "lastClaimTime")]
-    pub last_claim_time:u64
+    pub last_claim_time:i64,
+    pub proof:Vec<String>
 }
