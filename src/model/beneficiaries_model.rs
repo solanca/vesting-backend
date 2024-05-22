@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug,Deserialize,Serialize)]
 pub struct Beneficiaries {
     pub _id:ObjectId,
-    pub index:u32,
+
     pub key:String,
     #[serde(rename = "allocatedTokens")]
     pub allocated_tokens:f64,
