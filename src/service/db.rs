@@ -8,7 +8,7 @@ pub struct Database {
 
 impl Database {
     pub async fn _init() -> Self {
-        let url = "mongodb+srv://zhongxi1992:1FIZfgsoYDkS0Bg3@cluster0.x56nkq9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0".to_string();
+        let url = dotenv::var("MONGO_URL").unwrap();
       let client =   Client::with_uri_str(url.clone()).await.unwrap();
        let db =client.database("test");
        let beneficiaries = db.collection("beneficiaries");
@@ -26,7 +26,7 @@ impl Database {
 
         let old_beneficiary = self.beneficiaries.find_one(filter.clone(), None).await?;
         if let Some(old) = old_beneficiary {
-            if(old.last_claim_time == claim_time) {
+            if old.last_claim_time == claim_time {
                 return Err(Error::custom("LastClaim time can't same with before"))
             }
         }
