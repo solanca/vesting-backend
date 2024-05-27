@@ -62,7 +62,7 @@ async fn claimed(db: web::Data<Database>, path: Path<String>) -> HttpResponse {
                         };
                         
                         let balance = post - pre;
-                        // println!("token=={}",balance);
+                        println!("token=={}",balance.abs());
                         match db.update_beneficiary(owner.to_string(),claimed_time,balance).await {
                             Ok(success) => {
                                 // println!("success{:?}",success.unwrap());
