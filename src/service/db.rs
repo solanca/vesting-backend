@@ -18,7 +18,7 @@ impl Database {
 
     pub async fn update_beneficiary(&self,address:String,claim_time:i64,claimed_token:f64) -> Result<Option<Beneficiaries>,Error>{
 
-        let filter = doc! {"key": &address};
+        let filter = doc! {"wallet": &address};
         let update = doc! {
             "$set": {"lastClaimTime": claim_time},
             "$inc": {"claimedTokens": claimed_token}
@@ -36,7 +36,7 @@ impl Database {
     }
 
     pub async fn get_beneficiary(&self,address:String) -> Result<Option<Beneficiaries>,Error> {
-        let result = self.beneficiaries.find_one(doc! {"key":address}, None).await.ok().expect("Find failed");
+        let result = self.beneficiaries.find_one(doc! {"wallet":address}, None).await.ok().expect("Find failed");
         Ok(result)
     }
 }
