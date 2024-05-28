@@ -65,7 +65,7 @@ async fn claimed(db: web::Data<Database>, path: Path<String>) -> HttpResponse {
                         println!("token=={}",balance.abs());
                         match db.update_beneficiary(owner.to_string(),claimed_time,balance).await {
                             Ok(success) => {
-                                // println!("success{:?}",success.unwrap());
+                                println!("success{:?}",success.unwrap());
                                 HttpResponse::Ok().body("success")
                             },
                             Err(e) => {HttpResponse::InternalServerError().body(e.to_string())},

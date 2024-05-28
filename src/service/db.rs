@@ -24,15 +24,22 @@ impl Database {
             "$inc": {"claimedTokens": claimed_token}
         };
 
-        let old_beneficiary = self.beneficiaries.find_one(filter.clone(), None).await?;
+        let old_beneficiary = match self.beneficiaries.find_one(filter.clone(), None).await {
+            Ok(old) => old,
+            Err(e) => {return Err(Error::custom(e.to_string()));},
+        };
         if let Some(old) = old_beneficiary {
             if old.last_claim_time == claim_time {
                 return Err(Error::custom("LastClaim time can't same with before"))
             }
         }
         let options = FindOneAndUpdateOptions::builder().return_document(mongodb::options::ReturnDocument::After).build();
-        let result = self.beneficiaries.find_one_and_update(filter, update, options).await?;
-        Ok(result)
+        let result = self.beneficiaries.find_one_and_update(filter, update, options).await;
+        match result {
+            Ok(result) => {return Ok(result);},
+            Err(e) =>{return Err(Error::custom(e.to_string()));}
+        }
+       
     }
 
     pub async fn get_beneficiary(&self,address:String) -> Result<Option<Beneficiaries>,Error> {
