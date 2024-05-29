@@ -7,8 +7,9 @@ use solana_transaction_status::{EncodedConfirmedTransactionWithStatusMeta, UiTra
 
 pub async fn get_data_from_transaction(signature:String) -> Result<Result<EncodedConfirmedTransactionWithStatusMeta, solana_client::client_error::ClientError>, actix_web::error::BlockingError> {
     let sign = Signature::from_str(&signature).unwrap();
+    let solana_rpc = dotenv::var("SOLANA_RPC_URL").unwrap();
     web::block(move || {
-        let client = RpcClient::new("https://api.devnet.solana.com");
+        let client = RpcClient::new(solana_rpc);
         // let signature = SolSignature::from_str(&result._id.clone()).unwrap();
         let config = RpcTransactionConfig {
             encoding: None,
