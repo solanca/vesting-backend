@@ -5332,6 +5332,8 @@ version = "0.1.0"
 dependencies = [
  "actix-cors",
  "actix-web",
+ "base64 0.22.1",
+ "bincode",
  "chrono",
  "dotenv",
  "env_logger 0.11.3",
@@ -5339,6 +5341,7 @@ dependencies = [
  "mongodb",
  "regex",
  "serde",
+ "serde_json",
  "solana-client",
  "solana-sdk",
  "solana-transaction-status",
