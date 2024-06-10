@@ -5,9 +5,10 @@ use serde::{Deserialize, Serialize};
 pub struct Beneficiaries {
     pub _id: ObjectId,
     pub wallet: String,
-    pub farm: bool,
-    pub yetiz: bool,
-    pub presale: bool,
+    pub total: f64,
+    pub farm: f64,
+    pub yetiz: f64,
+    pub presale: f64,
     pub pixiz: f64,
     #[serde(rename = "claimedTokens")]
     pub claimed_tokens: f64,
